@@ -1,0 +1,29 @@
+{
+  "name": "node-red-contrib-assert",
+  "version": "1.0.0",
+  "description": "A node-red node to check message property values.",
+  "dependencies": {
+  },
+  "author": {
+    "name": "Dean Cording",
+    "email": "dean@cording.id.au"
+  },
+  "license": "Apache 2.0",
+  "keywords": [
+    "node-red",
+    "assert"
+  ],
+  "bugs": {
+    "url": "https://github.com/DeanCording/node-red-contrib-assert/issues"
+  },
+  "homepage": "https://github.com/DeanCording/node-red-contrib-assert",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DeanCording/node-red-contrib-assert.git"
+  },
+  "node-red": {
+    "nodes": {
+      "md5": "assert.js"
+    }
+  }
+}
