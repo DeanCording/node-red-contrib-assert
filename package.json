@@ -8,7 +8,7 @@
     "name": "Dean Cording",
     "email": "dean@cording.id.au"
   },
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "keywords": [
     "node-red",
     "assert"
