@@ -88,9 +88,11 @@ module.exports = function(RED) {
                     }
                     node.previousValue = prop;
                     if (!operators[rule.t](test,v1,v2,rule.case)) {
+                        this.status({fill:"red",shape:"dot",text:"assertion failed"});
                         throw new Error("Assertion failed");
                     }
                 }
+                this.status({fill:"green",shape:"dot",text:"ok"});
                 this.send(msg);
             } catch(err) {
                 node.warn(err);
