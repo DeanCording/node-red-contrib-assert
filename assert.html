@@ -17,11 +17,11 @@
 
 <script type="text/x-red" data-template-name="assert">
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
-        <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
     </div>
     <div class="form-row">
-        <label data-i18n="switch.label.property"></label>
+        <label data-i18n="node-red:switch.label.property"></label>
         <input type="text" id="node-input-property" style="width: 70%"/>
     </div>
     <div class="form-row node-input-rule-container-row">
@@ -55,7 +55,7 @@
         },
         oneditprepare: function() {
             var node = this;
-            var previousValueType = {value:"prev",label:this._("inject.previous"),hasValue:false};
+            var previousValueType = {value:"prev",label:this._("node-red:inject.previous"),hasValue:false};
 
             $("#node-input-property").typedInput({default:this.propertyType||'msg',types:['msg','flow','global']});
             var operators = [
@@ -65,17 +65,17 @@
                 {v:"lte",t:"<="},
                 {v:"gt",t:">"},
                 {v:"gte",t:">="},
-                {v:"btwn",t:this._("switch.rules.btwn")},
-                {v:"cont",t:this._("switch.rules.cont")},
-                {v:"regex",t:this._("switch.rules.regex")},
-                {v:"true",t:this._("switch.rules.true")},
-                {v:"false",t:this._("switch.rules.false")},
-                {v:"null",t:this._("switch.rules.null")},
-                {v:"nnull",t:this._("switch.rules.nnull")},
+                {v:"btwn",t:this._("node-red:switch.rules.btwn")},
+                {v:"cont",t:this._("node-red:switch.rules.cont")},
+                {v:"regex",t:this._("node-red:switch.rules.regex")},
+                {v:"true",t:this._("node-red:switch.rules.true")},
+                {v:"false",t:this._("node-red:switch.rules.false")},
+                {v:"null",t:this._("node-red:switch.rules.null")},
+                {v:"nnull",t:this._("node-red:switch.rules.nnull")},
             ];
 
-            var andLabel = this._("switch.and");
-            var caseLabel = this._("switch.ignorecase");
+            var andLabel = this._("node-red:switch.and");
+            var caseLabel = this._("node-red:switch.ignorecase");
 
             function resizeRule(rule) {
                 var newWidth = rule.width();
@@ -123,7 +123,7 @@
                     var btwnAndLabel = $('<span/>',{class:"node-input-rule-btwn-label"}).text(" "+andLabel+" ").appendTo(row3);
                     var btwnValue2Field = $('<input/>',{class:"node-input-rule-btwn-value2",type:"text",style:"margin-left:2px;"}).appendTo(row3).typedInput({default:'num',types:['msg','flow','global','str','num',previousValueType]});
                     var finalspan = $('<span/>',{style:"float: right;margin-top: 6px;"}).appendTo(row);
-                    finalspan.append(' &#8594; <span class="node-input-rule-index">'+(i+1)+'</span> ');
+                    finalspan.append('<span class="node-input-rule-index">'+(i+1)+'</span> ');
                     var caseSensitive = $('<input/>',{id:"node-input-rule-case-"+i,class:"node-input-rule-case",type:"checkbox",style:"width:auto;vertical-align:top"}).appendTo(row2);
                     $('<label/>',{for:"node-input-rule-case-"+i,style:"margin-left: 3px;"}).text(caseLabel).appendTo(row2);
                     selectField.change(function() {

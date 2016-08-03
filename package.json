@@ -23,7 +23,7 @@
   },
   "node-red": {
     "nodes": {
-      "md5": "assert.js"
+      "assert": "assert.js"
     }
   }
 }

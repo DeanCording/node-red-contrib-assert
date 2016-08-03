@@ -91,7 +91,7 @@ module.exports = function(RED) {
                         throw new Error("Assertion failed");
                     }
                 }
-                this.send(onward);
+                this.send(msg);
             } catch(err) {
                 node.warn(err);
             }
