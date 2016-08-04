@@ -33,6 +33,23 @@ module.exports = function(RED) {
         'nnull': function(a) { return (typeof a != "undefined" && a !== null); }
     };
 
+    var operatorsDesc = {
+        'eq': function(a, b) { return "" + a +  "== " + b; },
+        'neq': function(a, b) { return "" + a + "!=" + b; },
+        'lt': function(a, b) { return "" + a + "<" + b; },
+        'lte': function(a, b) { return "" + a + "<=" + b; },
+        'gt': function(a, b) { return "" + a + ">" + b; },
+        'gte': function(a, b) { return "" + a + ">=" + b; },
+        'btwn': function(a, b, c) { return "" + a + ">=" + b + " && " + a + "<=" + c; },
+        'cont': function(a, b) { return "" + a + " contains " + b; },
+        'regex': function(a, b, c, d) { return "" + a + " " + b + "case insensitive: " + d; },
+        'true': function(a) { return "" + a + "is true"; },
+        'false': function(a) { return "" + a + "is false"; },
+        'null': function(a) { return "" + a + "is null"; },
+        'nnull': function(a) { return "" + a + "is not null"; }
+    };
+
+
     function AssertNode(n) {
         RED.nodes.createNode(this, n);
         this.rules = n.rules || [];
@@ -88,8 +105,8 @@ module.exports = function(RED) {
                     }
                     node.previousValue = prop;
                     if (!operators[rule.t](test,v1,v2,rule.case)) {
-                        this.status({fill:"red",shape:"dot",text:"assertion failed"});
-                        throw new Error("Assertion failed");
+                        this.status({fill:"red",shape:"dot",text:"Assertion " + i + " failed"});
+                        throw new Error("Assertion failed: " + node.property + "- " + operatorsDesc[rule.t](test,v1,v2,rule.case));
                     }
                 }
                 this.status({fill:"green",shape:"dot",text:"ok"});
