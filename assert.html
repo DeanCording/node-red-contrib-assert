@@ -112,7 +112,7 @@
                     var row2 = $('<div/>',{style:"padding-top: 5px; padding-left: 175px;"}).appendTo(container);
                     var row3 = $('<div/>',{style:"padding-top: 5px; padding-left: 102px;"}).appendTo(container);
 
-                    $("<label/>",{data-i18n:"node-red:switch.label.property"}).appendTo(row);
+                    row.append("<label data-i18n='node-red:switch.label.property'></label>");
 
                     $('<input/>',{class:"node-input-rule-property",type:"text",style:"margin-left: 5px; width: 70%;"}).appendTo(row).typedInput({default:'msg',types:['msg','flow','global']});
 
