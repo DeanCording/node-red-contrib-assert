@@ -48,7 +48,7 @@ module.exports = function(RED) {
         'false': function(a) { return "" + a + " is false"; },
         'null': function(a) { return "" + a + " is null"; },
         'nnull': function(a) { return " is not null"; },
-        'type': function(a, b) { return (typeof a) + " is " + b;}
+        'type': function(a, b) { if (b == "array") return Array.isArray(a); else if (b == "buffer") return Buffer.isBuffer(a); else return (typeof a) + " is " + b;}
     };
 
 
