@@ -42,71 +42,73 @@ module.exports = function(RED) {
         'gte': function(a, b) { return "" + a + ">=" + b; },
         'btwn': function(a, b, c) { return "" + a + ">=" + b + " && " + a + "<=" + c; },
         'cont': function(a, b) { return "" + a + " contains " + b; },
-        'regex': function(a, b, c, d) { return "" + a + " " + b + "case insensitive: " + d; },
-        'true': function(a) { return "" + a + "is true"; },
-        'false': function(a) { return "" + a + "is false"; },
-        'null': function(a) { return "" + a + "is null"; },
-        'nnull': function(a) { return "" + a + "is not null"; }
+        'regex': function(a, b, c, d) { return "" + a + " " + b + " case insensitive: " + d; },
+        'true': function(a) { return "" + a + " is true"; },
+        'false': function(a) { return "" + a + " is false"; },
+        'null': function(a) { return "" + a + " is null"; },
+        'nnull': function(a) { return "" + a + " is not null"; }
     };
 
 
     function AssertNode(n) {
         RED.nodes.createNode(this, n);
         this.rules = n.rules || [];
-        this.property = n.property;
-        this.propertyType = n.propertyType || "msg";
-        this.previousValue = null;
         var node = this;
         for (var i=0; i<this.rules.length; i+=1) {
             var rule = this.rules[i];
-            if (!rule.vt) {
-                if (!isNaN(Number(rule.v))) {
-                    rule.vt = 'num';
+
+            rule.propertyType = rule.propertyType || "msg";
+
+            rule.previousValue = null;
+
+            if (!rule.valueType) {
+                if (!isNaN(Number(rule.value))) {
+                    rule.valueType = 'num';
                 } else {
-                    rule.vt = 'str';
+                    rule.valueType = 'str';
                 }
             }
-            if (rule.vt === 'num') {
-                if (!isNaN(Number(rule.v))) {
-                    rule.v = Number(rule.v);
+            if (rule.valueType === 'num') {
+                if (!isNaN(Number(rule.value))) {
+                    rule.value = Number(rule.value);
                 }
             }
-            if (typeof rule.v2 !== 'undefined') {
-                if (!rule.v2t) {
-                    if (!isNaN(Number(rule.v2))) {
-                        rule.v2t = 'num';
+            if (typeof rule.value2 !== 'undefined') {
+                if (!rule.value2Type) {
+                    if (!isNaN(Number(rule.value2))) {
+                        rule.value2Type = 'num';
                     } else {
-                        rule.v2t = 'str';
+                        rule.value2Type = 'str';
                     }
                 }
-                if (rule.v2t === 'num') {
-                    rule.v2 = Number(rule.v2);
+                if (rule.value2Type === 'num') {
+                    rule.value2 = Number(rule.value2);
                 }
             }
         }
 
         this.on('input', function (msg) {
             try {
-                var prop = RED.util.evaluateNodeProperty(node.property,node.propertyType,node,msg);
                 for (var i=0; i<node.rules.length; i+=1) {
                     var rule = node.rules[i];
-                    var test = prop;
+                    var test = RED.util.evaluateNodeProperty(rule.property,rule.propertyType,node,msg);
+;
                     var v1,v2;
-                    if (rule.vt === 'prev') {
+                    if (rule.valueType === 'prev') {
                         v1 = node.previousValue;
                     } else {
-                        v1 = RED.util.evaluateNodeProperty(rule.v,rule.vt,node,msg);
+                        v1 = RED.util.evaluateNodeProperty(rule.value,rule.valueType,node,msg);
                     }
-                    v2 = rule.v2;
-                    if (rule.v2t === 'prev') {
+                    v2 = rule.value2;
+                    if (rule.value2Type === 'prev') {
                         v2 = node.previousValue;
                     } else if (typeof v2 !== 'undefined') {
-                        v2 = RED.util.evaluateNodeProperty(rule.v2,rule.v2t,node,msg);
+                        v2 = RED.util.evaluateNodeProperty(rule.value2,rule.value2Type,node,msg);
                     }
-                    node.previousValue = prop;
-                    if (!operators[rule.t](test,v1,v2,rule.case)) {
+                    rule.previousValue = test;
+                    if (!operators[rule.type](test,v1,v2,rule.case)) {
                         this.status({fill:"red",shape:"dot",text:"Assertion " + (i+1) + " failed"});
-                        throw new Error("Assertion " + (i+1) + " failed: " + node.propertyType + ":" + node.property + ": " + operatorsDesc[rule.t](test,v1,v2,rule.case));
+                        throw new Error("Assertion " + (i+1) + " failed: " + rule.propertyType + ":" + rule.property + ": " + operatorsDesc[rule.type](test,v1,v2,rule.case));
                     }
                 }
                 this.status({fill:"green",shape:"dot",text:"ok"});
