@@ -75,6 +75,8 @@
 
             function resizeRule(rule) {
                 var newWidth = rule.width();
+                var propertyField = rule.find(".node-input-rule-property");
+                propertyField.typedInput("width", newWidth - 70);
                 var selectField = rule.find("select");
                 var type = selectField.val()||"";
                 var valueField = rule.find(".node-input-rule-value");
@@ -112,7 +114,7 @@
                     var row2 = $('<div/>',{style:"padding-top: 5px; padding-left: 175px;"}).appendTo(container);
                     var row3 = $('<div/>',{style:"padding-top: 5px; padding-left: 102px;"}).appendTo(container);
 
-                    $('<input/>',{class:"node-input-rule-property",type:"text",style:"margin-left: 5px;"}).appendTo(row).typedInput({default:'msg',types:['msg','flow','global']});
+                    var propertyField = $('<input/>',{class:"node-input-rule-property",type:"text",style:"margin-left: 5px;"}).appendTo(row).typedInput({default:'msg',types:['msg','flow','global']});
 
                     var finalspan = $('<span/>',{style:"float: right;margin-top: 6px;"}).appendTo(row);
                     finalspan.append('<span class="node-input-rule-index">'+(i+1)+'</span> ');
@@ -157,7 +159,11 @@
                             row3.hide();
                         }
                     });
+
+                    propertyField.typedInput('value', rule.property);
+                    propertyField.typedInput('type', rult.propertyType);
                     selectField.val(rule.type);
+
                     if (rule.type == "btwn") {
                         btwnValueField.typedInput('value',rule.value);
                         btwnValueField.typedInput('type',rule.valueType||'num');
