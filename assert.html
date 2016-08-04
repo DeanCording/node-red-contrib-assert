@@ -112,7 +112,7 @@
                     var row2 = $('<div/>',{style:"padding-top: 5px; padding-left: 175px;"}).appendTo(container);
                     var row3 = $('<div/>',{style:"padding-top: 5px; padding-left: 102px;"}).appendTo(container);
 
-                    $('<input/>',{class:"node-input-rule-property",type:"text",style:"margin-left: 5px; width: 100%;"}).appendTo(row).typedInput({default:'msg',types:['msg','flow','global']});
+                    $('<input/>',{class:"node-input-rule-property",type:"text",style:"margin-left: 5px;"}).appendTo(row).typedInput({default:'msg',types:['msg','flow','global']});
 
                     var finalspan = $('<span/>',{style:"float: right;margin-top: 6px;"}).appendTo(row);
                     finalspan.append('<span class="node-input-rule-index">'+(i+1)+'</span> ');
@@ -123,7 +123,7 @@
                     }
                     var valueField = $('<input/>',{class:"node-input-rule-value",type:"text",style:"margin-left: 5px; width: 145px;"}).appendTo(row1).typedInput({default:'str',types:['msg','flow','global','str','num',previousValueType]});
 
-                    var btwnValueField = $('<input/>',{class:"node-input-rule-btwn-value",type:"text",style:"margin-left: 5px;"}).appendTo(row).typedInput({default:'num',types:['msg','flow','global','str','num',previousValueType]});
+                    var btwnValueField = $('<input/>',{class:"node-input-rule-btwn-value", type:"text",style:"margin-left: 5px;"}).appendTo(row1).typedInput({default:'num',types:['msg','flow','global','str','num',previousValueType]});
 
                     var btwnAndLabel = $('<span/>',{class:"node-input-rule-btwn-label"}).text(" "+andLabel+" ").appendTo(row3);
 
@@ -213,7 +213,7 @@
                         r.value = rule.find(".node-input-rule-value").typedInput('value');
                         r.valueType = rule.find(".node-input-rule-value").typedInput('type');
                     }
-                    if (type === "regex") {
+                    if (r.type === "regex") {
                         r.case = rule.find(".node-input-rule-case").prop("checked");
                     }
                 }
