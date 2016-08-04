@@ -231,14 +231,14 @@
                 var r = {};
                 r.property = rule.find(".node-input-rule-property").typedInput('value');
                 r.propertyType = rule.find(".node-input-rule-property").typedInput('type');
-                r.type =  rule.find("select").val();
+                r.type = rule.find("select").val();
                 if (!(r.type === "true" || r.type === "false" || r.type === "null" || r.type === "nnull")) {
                     if (r.type === "btwn") {
                         r.value = rule.find(".node-input-rule-btwn-value").typedInput('value');
                         r.valueType = rule.find(".node-input-rule-btwn-value").typedInput('type');
                         r.value2 = rule.find(".node-input-rule-btwn-value2").typedInput('value');
                         r.value2Type = rule.find(".node-input-rule-btwn-value2").typedInput('type');
-                    } else if (type === "type") {
+                    } else if (r.type === "type") {
                         r.value = rule.find(".node-input-rule-type").val();
                     } else {
                         r.value = rule.find(".node-input-rule-value").typedInput('value');
