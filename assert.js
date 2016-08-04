@@ -34,7 +34,7 @@ module.exports = function(RED) {
     };
 
     var operatorsDesc = {
-        'eq': function(a, b) { return "" + a +  "== " + b; },
+        'eq': function(a, b) { return "" + a +  "==" + b; },
         'neq': function(a, b) { return "" + a + "!=" + b; },
         'lt': function(a, b) { return "" + a + "<" + b; },
         'lte': function(a, b) { return "" + a + "<=" + b; },
@@ -105,8 +105,8 @@ module.exports = function(RED) {
                     }
                     node.previousValue = prop;
                     if (!operators[rule.t](test,v1,v2,rule.case)) {
-                        this.status({fill:"red",shape:"dot",text:"Assertion " + i + " failed"});
-                        throw new Error("Assertion failed: " + node.property + "- " + operatorsDesc[rule.t](test,v1,v2,rule.case));
+                        this.status({fill:"red",shape:"dot",text:"Assertion " + (i+1) + " failed"});
+                        throw new Error("Assertion " + (i+1) + " failed: " + node.propertyType + ":" + node.property + ": " + operatorsDesc[rule.t](test,v1,v2,rule.case));
                     }
                 }
                 this.status({fill:"green",shape:"dot",text:"ok"});
