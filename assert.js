@@ -30,7 +30,8 @@ module.exports = function(RED) {
         'true': function(a) { return a === true; },
         'false': function(a) { return a === false; },
         'null': function(a) { return (typeof a == "undefined" || a === null); },
-        'nnull': function(a) { return (typeof a != "undefined" && a !== null); }
+        'nnull': function(a) { return (typeof a != "undefined" && a !== null); },
+        'typeof': function(a, b) (return typeof a === b); }
     };
 
     var operatorsDesc = {
@@ -46,7 +47,8 @@ module.exports = function(RED) {
         'true': function(a) { return "" + a + " is true"; },
         'false': function(a) { return "" + a + " is false"; },
         'null': function(a) { return "" + a + " is null"; },
-        'nnull': function(a) { return " is not null"; }
+        'nnull': function(a) { return " is not null"; },
+        'typeof': function(a, b) { return (typeof a) + " is " + b";}
     };
 
 

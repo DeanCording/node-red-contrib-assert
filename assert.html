@@ -68,7 +68,10 @@
                 {value:"false",type:this._("node-red:switch.rules.false")},
                 {value:"null",type:this._("node-red:switch.rules.null")},
                 {value:"nnull",type:this._("node-red:switch.rules.nnull")},
+                {value:"typeof",type:"typeof"}
             ];
+
+            var types = ["number", "string", "boolean", "array", "buffer", "object"];
 
             var andLabel = this._("node-red:switch.and");
             var caseLabel = this._("node-red:switch.ignorecase");
@@ -128,7 +131,12 @@
                     for (var d in operators) {
                         selectField.append($("<option></option>").val( operators[d].value).text(operators[d].type));
                     }
-                    var valueField = $('<input/>',{class:"node-input-rule-value",type:"text",style:"margin-left: 5px; width: 145px;"}).appendTo(row1).typedInput({default:'str',types:['msg','flow','global','str','num',previousValueType]});
+                    var valueField = $('<input/>',{class:"node-input-rule-typeof",type:"text",style:"margin-left: 5px; width: 145px;"}).appendTo(row1).typedInput({default:'str',types:['msg','flow','global','str','num',previousValueType]});
+
+                    var typeofField = $("<select/>").appendTo(row1);
+                    for (var ty=0; ty < types.length; ty++) {
+                        typeofField.append($("<option></option>").val(types[ty]).text(types[ty]));
+                    }
 
                     var btwnValueField = $('<input/>',{class:"node-input-rule-btwn-value", type:"text",style:"margin-left: 5px;"}).appendTo(row1).typedInput({default:'num',types:['msg','flow','global','str','num',previousValueType]});
 
@@ -144,15 +152,23 @@
                         var type = selectField.val();
                         if (type === "btwn") {
                             valueField.typedInput('hide');
+                            typeofField.hide();
                             btwnValueField.typedInput('show');
                         } else {
                             btwnValueField.typedInput('hide');
-                            if (type === "true" || type === "false" || type === "null" || type === "nnull" || type === "else") {
+                            if (type === "true" || type === "false" || type === "null" || type === "nnull") {
                                 valueField.typedInput('hide');
+                                typeofField.hide();
+                            } else if (type === "typeof") {
+                                valueField.typedInput('hide');
+                                typeofField.show();
+
                             } else {
                                 valueField.typedInput('show');
+                                typeofField.hide();
                             }
                         }
+
                         if (type === "regex") {
                             row2.show();
                             row3.hide();
@@ -214,12 +230,14 @@
                 r.property = rule.find(".node-input-rule-property").typedInput('value');
                 r.propertyType = rule.find(".node-input-rule-property").typedInput('type');
                 r.type =  rule.find("select").val();
-                if (!(r.type === "true" || r.type === "false" || r.type === "null" || r.type === "nnull" || r.type === "else")) {
+                if (!(r.type === "true" || r.type === "false" || r.type === "null" || r.type === "nnull")) {
                     if (r.type === "btwn") {
                         r.value = rule.find(".node-input-rule-btwn-value").typedInput('value');
                         r.valueType = rule.find(".node-input-rule-btwn-value").typedInput('type');
                         r.value2 = rule.find(".node-input-rule-btwn-value2").typedInput('value');
                         r.value2Type = rule.find(".node-input-rule-btwn-value2").typedInput('type');
+                    } else if (type === "typeof") {
+                        r.value = rule.find(".node-input-rule-typeof").val();
                     } else {
                         r.value = rule.find(".node-input-rule-value").typedInput('value');
                         r.valueType = rule.find(".node-input-rule-value").typedInput('type');
