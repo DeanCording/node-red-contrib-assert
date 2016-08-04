@@ -31,7 +31,7 @@ module.exports = function(RED) {
         'false': function(a) { return a === false; },
         'null': function(a) { return (typeof a == "undefined" || a === null); },
         'nnull': function(a) { return (typeof a != "undefined" && a !== null); },
-        'typeof': function(a, b) { return (typeof a) === b; }
+        'typeof': function(a, b) { return typeof a == b; }
     };
 
     var operatorsDesc = {
