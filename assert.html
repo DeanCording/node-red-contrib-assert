@@ -107,14 +107,12 @@
                     if (!rule.hasOwnProperty('type')) {
                         rule.type = 'eq';
                     }
-                    var row = $('<div/>').appendTo(container);
-                    var row1 = $('<div/>').appendTo(container);
+                    var row = $('<div/>'),{style:"padding-left: 175px;"}.appendTo(container);
+                    var row1 = $('<div/>',{style:"padding-top: 5px; padding-left: 175px;"}).appendTo(container);
                     var row2 = $('<div/>',{style:"padding-top: 5px; padding-left: 175px;"}).appendTo(container);
                     var row3 = $('<div/>',{style:"padding-top: 5px; padding-left: 102px;"}).appendTo(container);
 
-                    row.append("<label data-i18n='node-red:switch.label.property'></label>");
-
-                    $('<input/>',{class:"node-input-rule-property",type:"text",style:"margin-left: 5px; width: 70%;"}).appendTo(row).typedInput({default:'msg',types:['msg','flow','global']});
+                    $('<input/>',{class:"node-input-rule-property",type:"text",style:"margin-left: 5px; width: 100%;"}).appendTo(row).typedInput({default:'msg',types:['msg','flow','global']});
 
                     var finalspan = $('<span/>',{style:"float: right;margin-top: 6px;"}).appendTo(row);
                     finalspan.append('<span class="node-input-rule-index">'+(i+1)+'</span> ');
