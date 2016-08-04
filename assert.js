@@ -40,13 +40,13 @@ module.exports = function(RED) {
         'lte': function(a, b) { return "" + a + "<=" + b; },
         'gt': function(a, b) { return "" + a + ">" + b; },
         'gte': function(a, b) { return "" + a + ">=" + b; },
-        'btwn': function(a, b, c) { return "" + a + ">=" + b + " && " + a + "<=" + c; },
+        'btwn': function(a, b, c) { return "" + a + " is between " + b + " and " + c; },
         'cont': function(a, b) { return "" + a + " contains " + b; },
         'regex': function(a, b, c, d) { return "" + a + " " + b + " case insensitive: " + d; },
         'true': function(a) { return "" + a + " is true"; },
         'false': function(a) { return "" + a + " is false"; },
         'null': function(a) { return "" + a + " is null"; },
-        'nnull': function(a) { return "" + a + " is not null"; }
+        'nnull': function(a) { return " is not null"; }
     };
 
 

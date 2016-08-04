@@ -76,7 +76,7 @@
             function resizeRule(rule) {
                 var newWidth = rule.width();
                 var propertyField = rule.find(".node-input-rule-property");
-                propertyField.typedInput("width", newWidth - 70);
+                propertyField.typedInput("width", newWidth - 52);
                 var selectField = rule.find("select");
                 var type = selectField.val()||"";
                 var valueField = rule.find(".node-input-rule-value");
@@ -109,6 +109,11 @@
                     if (!rule.hasOwnProperty('type')) {
                         rule.type = 'eq';
                     }
+
+                    if (!rule.hasOwnProperty('property')){
+                        rule.property = 'payload';
+                    }
+
                     var row = $('<div/>').appendTo(container);
                     var row1 = $('<div/>',{style:"padding-top: 5px;"}).appendTo(container);
                     var row2 = $('<div/>',{style:"padding-top: 5px; padding-left: 175px;"}).appendTo(container);
