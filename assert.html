@@ -20,10 +20,6 @@
         <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name"></span></label>
         <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
     </div>
-    <div class="form-row">
-        <label data-i18n="node-red:switch.label.property"></label>
-        <input type="text" id="node-input-property" style="width: 70%"/>
-    </div>
     <div class="form-row node-input-rule-container-row">
         <ol id="node-input-rule-container"></ol>
     </div>
@@ -116,7 +112,9 @@
                     var row2 = $('<div/>',{style:"padding-top: 5px; padding-left: 175px;"}).appendTo(container);
                     var row3 = $('<div/>',{style:"padding-top: 5px; padding-left: 102px;"}).appendTo(container);
 
-                    $('<input/>',{class:"node-input-rule-property",type:"text",style:"margin-left: 5px; width: 145px;"}).appendTo(row).typedInput({default:'msg',types:['msg','flow','global']});
+                    $("<label/>",{data-i18n:"node-red:switch.label.property"}).appendTo(row);
+
+                    $('<input/>',{class:"node-input-rule-property",type:"text",style:"margin-left: 5px; width: 70%;"}).appendTo(row).typedInput({default:'msg',types:['msg','flow','global']});
 
                     var finalspan = $('<span/>',{style:"float: right;margin-top: 6px;"}).appendTo(row);
                     finalspan.append('<span class="node-input-rule-index">'+(i+1)+'</span> ');
