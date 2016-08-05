@@ -94,7 +94,7 @@ module.exports = function(RED) {
                 for (var i=0; i<node.rules.length; i+=1) {
                     var rule = node.rules[i];
                     var test = RED.util.evaluateNodeProperty(rule.property,rule.propertyType,node,msg);
-;
+
                     var v1,v2;
                     if (rule.valueType === 'prev') {
                         v1 = rule.previousValue;
@@ -107,10 +107,14 @@ module.exports = function(RED) {
                     } else if (typeof v2 !== 'undefined') {
                         v2 = RED.util.evaluateNodeProperty(rule.value2,rule.value2Type,node,msg);
                     }
-                    if (!operators[rule.type](test,v1,v2,rule.case)) {
-                        this.status({fill:"red",shape:"dot",text:"Assertion " + (i+1) + " failed"});
-                        throw new Error("Assertion " + (i+1) + " failed: " + rule.propertyType + ":" + rule.property + ": " + operatorsDesc[rule.type](test,v1,v2,rule.case));
+
+                    if (!(((rule.valueType === 'prev') || (rule.value2Type === 'prev')) && (rule.previousValue == null))) {
+                        if (!operators[rule.type](test,v1,v2,rule.case)) {
+                            this.status({fill:"red",shape:"dot",text:"Assertion " + (i+1) + " failed"});
+                            throw new Error("Assertion " + (i+1) + " failed: " + rule.propertyType + ":" + rule.property + ": " + operatorsDesc[rule.type](test,v1,v2,rule.case));
+                        }
                     }
+
                     rule.previousValue = test;
 
                 }
