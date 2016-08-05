@@ -97,21 +97,22 @@ module.exports = function(RED) {
 ;
                     var v1,v2;
                     if (rule.valueType === 'prev') {
-                        v1 = node.previousValue;
+                        v1 = rule.previousValue;
                     } else {
                         v1 = RED.util.evaluateNodeProperty(rule.value,rule.valueType,node,msg);
                     }
                     v2 = rule.value2;
                     if (rule.value2Type === 'prev') {
-                        v2 = node.previousValue;
+                        v2 = rule.previousValue;
                     } else if (typeof v2 !== 'undefined') {
                         v2 = RED.util.evaluateNodeProperty(rule.value2,rule.value2Type,node,msg);
                     }
-                    rule.previousValue = test;
                     if (!operators[rule.type](test,v1,v2,rule.case)) {
                         this.status({fill:"red",shape:"dot",text:"Assertion " + (i+1) + " failed"});
                         throw new Error("Assertion " + (i+1) + " failed: " + rule.propertyType + ":" + rule.property + ": " + operatorsDesc[rule.type](test,v1,v2,rule.case));
                     }
+                    rule.previousValue = test;
+
                 }
                 this.status({fill:"green",shape:"dot",text:"ok"});
                 this.send(msg);
