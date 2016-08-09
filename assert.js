@@ -121,7 +121,7 @@ module.exports = function(RED) {
                 this.status({fill:"green",shape:"dot",text:"ok"});
                 this.send(msg);
             } catch(err) {
-                node.warn(err);
+                node.error(err);
             }
         });
     }
