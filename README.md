@@ -12,7 +12,7 @@ For a message to pass through the assert node, all tests must pass.  The first f
 
 Just insert the Assert node in your flow.  Set the appropriate test conditions to check that the specified properties are valid when a message passes through the Assert node.  Note that you can test global and flow properties as well.  Any message that does not pass the tests will be dropped and an error reported.
 
-Here is a sample flow that checks the msg.property value is less than 100:
+Here is a sample flow that checks the msg.payload property value is less than 100:
 
 ![Sample Flow](Sample Flow.png)
 
