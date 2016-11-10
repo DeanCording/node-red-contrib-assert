@@ -14,7 +14,7 @@ Just insert the Assert node in your flow.  Set the appropriate test conditions t
 
 Here is a sample flow that checks the msg.property value is less than 100:
 
-
+![Sample Flow](Sample Flow.png)
 
 ```
 [{"id":"ede6fe04.eded3","type":"assert","z":"8b42e25d.61776","name":"Payload < 100",
