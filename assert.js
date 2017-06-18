@@ -25,6 +25,7 @@ module.exports = function(RED) {
         'gt': function(a, b) { return a > b; },
         'gte': function(a, b) { return a >= b; },
         'btwn': function(a, b, c) { return a >= b && a <= c; },
+        'within': function(a, b, c) { return a >= b-c  && a <=  b+c;}, 
         'cont': function(a, b) { return (a + "").indexOf(b) != -1; },
         'regex': function(a, b, c, d) { return (a + "").match(new RegExp(b,d?'i':'')); },
         'true': function(a) { return a === true; },
@@ -42,6 +43,7 @@ module.exports = function(RED) {
         'gt': function(a, b) { return "" + a + ">" + b; },
         'gte': function(a, b) { return "" + a + ">=" + b; },
         'btwn': function(a, b, c) { return "" + a + " is between " + b + " and " + c; },
+        'within': function(a, b , c) { return "" + a + " is within " + c + " of " + b; }, 
         'cont': function(a, b) { return "" + a + " contains " + b; },
         'regex': function(a, b, c, d) { return "" + a + " " + b + " case insensitive: " + d; },
         'true': function(a) { return "" + a + " is true"; },
@@ -111,7 +113,7 @@ module.exports = function(RED) {
                     if (!(((rule.valueType === 'prev') || (rule.value2Type === 'prev')) && (rule.previousValue == null))) {
                         if (!operators[rule.type](test,v1,v2,rule.case)) {
                             this.status({fill:"red",shape:"dot",text:"Assertion " + (i+1) + " failed"});
-                            throw new Error("Assertion " + (i+1) + " failed: " + rule.propertyType + ":" + rule.property + ": " + operatorsDesc[rule.type](test,v1,v2,rule.case));
+                            throw new Error("Assertion " + (i+1) + " failed: " + rule.failMsg + "\n" + rule.propertyType + ":" + rule.property + ": " + operatorsDesc[rule.type](test,v1,v2,rule.case));
                         }
                     }
 
