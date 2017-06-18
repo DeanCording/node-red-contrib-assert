@@ -156,7 +156,7 @@
                     var caseSensitive = $('<input/>',{id:"node-input-rule-case-"+i,class:"node-input-rule-case",type:"checkbox",style:"width:auto;vertical-align:top"}).appendTo(row2);
                     $('<label/>',{for:"node-input-rule-case-"+i,style:"margin-left: 3px;"}).text(caseLabel).appendTo(row2);
                     
-                    $('<span>',class:"node-input-rule-msg-label"}).text("Fail Message").appendTo(row5);
+                    $('<span>',{class:"node-input-rule-msg-label"}).text("Fail Message").appendTo(row5);
                     var failMsgField = $('<input/>',{class:"node-input-rule-msg", type:"text", style:"margin-left: 2px"}).appendTo(row5);
 
                     selectField.change(function() {
@@ -182,7 +182,6 @@
                             } else if (type === "type") {
                                 valueField.typedInput('hide');
                                 typeField.show();
-
                             } else {
                                 valueField.typedInput('show');
                                 typeField.hide();
@@ -271,7 +270,7 @@
                         r.valueType = rule.find(".node-input-rule-btwn-value").typedInput('type');
                         r.value2 = rule.find(".node-input-rule-btwn-value2").typedInput('value');
                         r.value2Type = rule.find(".node-input-rule-btwn-value2").typedInput('type');
-                    } else if (r.type === "btwn") {
+                    } else if (r.type === "within") {
                         r.value = rule.find(".node-input-rule-within-value").typedInput('value');
                         r.valueType = rule.find(".node-input-rule-within-value").typedInput('type');
                         r.value2 = rule.find(".node-input-rule-within-value2").typedInput('value');
