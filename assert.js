@@ -17,6 +17,7 @@
 
 module.exports = function(RED) {
     "use strict";
+	
     var operators = {
         'eq': function(a, b) { return a == b; },
         'neq': function(a, b) { return a != b; },
@@ -25,7 +26,7 @@ module.exports = function(RED) {
         'gt': function(a, b) { return a > b; },
         'gte': function(a, b) { return a >= b; },
         'btwn': function(a, b, c) { return a >= b && a <= c; },
-        'within': function(a, b, c) { return a >= b-c  && a <=  b+c;}, 
+        'within': function(a, b, c) { return a >= c-b  && a <=  c+b;}, 
         'cont': function(a, b) { return (a + "").indexOf(b) != -1; },
         'regex': function(a, b, c, d) { return (a + "").match(new RegExp(b,d?'i':'')); },
         'true': function(a) { return a === true; },
@@ -53,14 +54,13 @@ module.exports = function(RED) {
         'type': function(a, b) { return (Array.isArray(a)?"array":(Buffer.isBuffer(a)?"buffer":(typeof a))) + " is " + b;}
     };
 
-
     function AssertNode(n) {
         RED.nodes.createNode(this, n);
         this.rules = n.rules || [];
         var node = this;
         for (var i=0; i<this.rules.length; i+=1) {
             var rule = this.rules[i];
-
+		
             rule.propertyType = rule.propertyType || "msg";
 
             rule.previousValue = null;
@@ -112,10 +112,10 @@ module.exports = function(RED) {
 
                     if (!(((rule.valueType === 'prev') || (rule.value2Type === 'prev')) && (rule.previousValue == null))) {
                         if (!operators[rule.type](test,v1,v2,rule.case)) {
-                            this.status({fill:"red",shape:"dot",text:"Assertion " + (i+1) + " failed"});
-                            throw new Error("Assertion " + (i+1) + " failed: " + " " + rule.propertyType + ":" + rule.property + ": " + operatorsDesc[rule.type](test,v1,v2,rule.case) + " " + rule.failMsg );
+                            this.status({fill:"red",shape:"dot",text:(rule.failMsg.length > 1) ? rule.failMsg : "Assertion " + (i+1) + " failed"});
                             
                             rule.previousValue = null;
+                            throw new Error("Assertion " + (i+1) + " failed: " + " " + rule.propertyType + ":" + rule.property + ": " + operatorsDesc[rule.type](test,v1,v2,rule.case) + " " + rule.failMsg );
                         }
                         
                     }
