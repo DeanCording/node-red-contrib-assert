@@ -63,7 +63,9 @@ module.exports = function(RED) {
 		
             rule.propertyType = rule.propertyType || "msg";
 
-            rule.previousValue = null;
+            rule.previousValue = [null];
+            rule.meanSize = rule.meanSize || 1;
+            rule.mean = null;
 
             if (!rule.valueType) {
                 if (!isNaN(Number(rule.value))) {
@@ -99,28 +101,31 @@ module.exports = function(RED) {
 
                     var v1,v2;
                     if (rule.valueType === 'prev') {
-                        v1 = rule.previousValue;
+                        v1 = rule.previousValue[0];
+                    } else if (rule.value2Type === 'mean') {
+                        v2 = rule.previousValue.reduce((previous, current) +> current += previous) / rule.previousValue.length;
                     } else {
                         v1 = RED.util.evaluateNodeProperty(rule.value,rule.valueType,node,msg);
                     }
                     v2 = rule.value2;
                     if (rule.value2Type === 'prev') {
-                        v2 = rule.previousValue;
+                        v2 = rule.previousValue[0];
+                    } else if (rule.value2Type === 'mean') {
+                        v2 = rule.previousValue.reduce((previous, current) +> current += previous) / rule.previousValue.length;
                     } else if (typeof v2 !== 'undefined') {
                         v2 = RED.util.evaluateNodeProperty(rule.value2,rule.value2Type,node,msg);
                     }
 
-                    if (!(((rule.valueType === 'prev') || (rule.value2Type === 'prev')) && (rule.previousValue == null))) {
-                        if (!operators[rule.type](test,v1,v2,rule.case)) {
-                            this.status({fill:"red",shape:"dot",text:(rule.failMsg.length > 1) ? rule.failMsg : "Assertion " + (i+1) + " failed"});
-                            
-                            rule.previousValue = null;
-                            throw new Error("Assertion " + (i+1) + " failed: " + " " + rule.propertyType + ":" + rule.property + ": " + operatorsDesc[rule.type](test,v1,v2,rule.case) + " " + rule.failMsg );
-                        }
-                        
+                    rule.previousValue.push(test);
+                    while (rule.previousValue.length > rule.meanSize) 
+                        rule.previousValue.shift();
+                    
+                    if (!operators[rule.type](test,v1,v2,rule.case)) {
+                        this.status({fill:"red",shape:"dot",text:(rule.failMsg.length > 1) ? rule.failMsg : "Assertion " + (i+1) + " failed"});
+                    
+                        throw new Error("Assertion " + (i+1) + " failed: " + " " + rule.propertyType + ":" + rule.property + ": " + operatorsDesc[rule.type](test,v1,v2,rule.case) + " " + rule.failMsg );
                     }
-
-                    rule.previousValue = test;
+                        
 
                 }
                 this.status({fill:"green",shape:"dot",text:"ok"});

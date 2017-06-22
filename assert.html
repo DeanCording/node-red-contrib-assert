@@ -53,6 +53,7 @@
         oneditprepare: function() {
             var node = this;
             var previousValueType = {value:"prev",label:this._("node-red:inject.previous"),hasValue:false};
+            var meanValueType = {value:"mean",label:"Mean",hasValue:true};
 
             var operators = [
                 {value:"eq",type:"=="},
@@ -157,7 +158,7 @@
 
                     var withinOfLabel = $('<span/>',{class:"node-input-rule-within-label"}).text("of").appendTo(row4);
 
-                    var withinValue2Field = $('<input/>',{class:"node-input-rule-within-value2", type:"text",style:"margin-left: 5px;"}).appendTo(row4).typedInput({default:'num',types:['msg','flow','global','num',previousValueType]});
+                    var withinValue2Field = $('<input/>',{class:"node-input-rule-within-value2", type:"text",style:"margin-left: 5px;"}).appendTo(row4).typedInput({default:'num',types:['msg','flow','global','num',previousValueType, meanValueType]});
 
                     var caseSensitive = $('<input/>',{id:"node-input-rule-case-"+i,class:"node-input-rule-case",type:"checkbox",style:"width:auto;vertical-align:top"}).appendTo(row2);
                     $('<label/>',{for:"node-input-rule-case-"+i,style:"margin-left: 3px;"}).text(caseLabel).appendTo(row2);
