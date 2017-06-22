@@ -64,8 +64,7 @@ module.exports = function(RED) {
             rule.propertyType = rule.propertyType || "msg";
 
             rule.previousValue = [null];
-            rule.meanSize = rule.meanSize || 1;
-            rule.mean = null;
+            rule.meanSize = 1;
 
             if (!rule.valueType) {
                 if (!isNaN(Number(rule.value))) {
@@ -89,6 +88,8 @@ module.exports = function(RED) {
                 }
                 if (rule.value2Type === 'num') {
                     rule.value2 = Number(rule.value2);
+                } else if (rule.value2Type === 'mean') {
+                    rule.meanSize = Number(rule.value2);
                 }
             }
         }
