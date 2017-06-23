@@ -44,7 +44,7 @@ module.exports = function(RED) {
         'gt': function(a, b) { return "" + a + ">" + b; },
         'gte': function(a, b) { return "" + a + ">=" + b; },
         'btwn': function(a, b, c) { return "" + a + " is between " + b + " and " + c; },
-        'within': function(a, b , c) { return "" + a + " is within " + b + " of " + c; }, 
+        'within': function(a, b, c) { return "" + a + " is within " + b + " of " + c; }, 
         'cont': function(a, b) { return "" + a + " contains " + b; },
         'regex': function(a, b, c, d) { return "" + a + " " + b + " case insensitive: " + d; },
         'true': function(a) { return "" + a + " is true"; },
@@ -63,7 +63,7 @@ module.exports = function(RED) {
 		
             rule.propertyType = rule.propertyType || "msg";
 
-            rule.previousValue = [null];
+            rule.previousValue = [];
             rule.meanSize = 1;
 
             if (!rule.valueType) {
@@ -100,33 +100,41 @@ module.exports = function(RED) {
                     var rule = node.rules[i];
                     var test = RED.util.evaluateNodeProperty(rule.property,rule.propertyType,node,msg);
 
-                    var v1,v2;
-                    if (rule.valueType === 'prev') {
-                        v1 = rule.previousValue[0];
-                    } else if (rule.value2Type === 'mean') {
-                        v2 = rule.previousValue.reduce((previous, current) +> current += previous) / rule.previousValue.length;
-                    } else {
-                        v1 = RED.util.evaluateNodeProperty(rule.value,rule.valueType,node,msg);
-                    }
-                    v2 = rule.value2;
-                    if (rule.value2Type === 'prev') {
-                        v2 = rule.previousValue[0];
-                    } else if (rule.value2Type === 'mean') {
-                        v2 = rule.previousValue.reduce((previous, current) +> current += previous) / rule.previousValue.length;
-                    } else if (typeof v2 !== 'undefined') {
-                        v2 = RED.util.evaluateNodeProperty(rule.value2,rule.value2Type,node,msg);
-                    }
+	            var pass = true;
+
+                    if (!(((rule.valueType === 'prev') || (rule.value2Type === 'prev') 
+			    || (rule.valueType === 'mean') || (rule.value2Type === 'mean')) 
+		            && (rule.previousValue.length == 0))) {                    
+
+	                var v1,v2;
+                        if (rule.valueType === 'prev') {
+                            v1 = rule.previousValue[0];
+                        } else if (rule.valueType === 'mean') {
+                            v1 = rule.previousValue.reduce((previous, current) => current += previous) / rule.previousValue.length;
+                        } else {
+                            v1 = RED.util.evaluateNodeProperty(rule.value,rule.valueType,node,msg);
+                        }
+                        v2 = rule.value2;
+                        if (rule.value2Type === 'prev') {
+                            v2 = rule.previousValue[0];
+                        } else if (rule.value2Type === 'mean') {
+                            v2 = rule.previousValue.reduce((previous, current) => current += previous) / rule.previousValue.length;
+                        } else if (typeof v2 !== 'undefined') {
+                            v2 = RED.util.evaluateNodeProperty(rule.value2,rule.value2Type,node,msg);
+                        }
+
+                        pass = operators[rule.type](test,v1,v2,rule.case);
+		    }
 
                     rule.previousValue.push(test);
                     while (rule.previousValue.length > rule.meanSize) 
                         rule.previousValue.shift();
-                    
-                    if (!operators[rule.type](test,v1,v2,rule.case)) {
+
+                    if (!pass) {
                         this.status({fill:"red",shape:"dot",text:(rule.failMsg.length > 1) ? rule.failMsg : "Assertion " + (i+1) + " failed"});
                     
                         throw new Error("Assertion " + (i+1) + " failed: " + " " + rule.propertyType + ":" + rule.property + ": " + operatorsDesc[rule.type](test,v1,v2,rule.case) + " " + rule.failMsg );
                     }
-                        
 
                 }
                 this.status({fill:"green",shape:"dot",text:"ok"});
