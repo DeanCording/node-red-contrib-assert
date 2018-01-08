@@ -1,6 +1,6 @@
 /**
  * Copyright 2013, 2015 IBM Corp.
- * Copyright 2016 Dean Cording
+ * Copyright 2018 Dean Cording <dean@cording.id.au>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

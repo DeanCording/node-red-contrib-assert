@@ -1,6 +1,6 @@
 <!--
   Copyright 2013, 2016 IBM Corp.
-  Copyright 2016, Dean Cording
+  Copyright 2018, Dean Cording <dean@cording.id.au>
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,10 +27,47 @@
 
 <script type="text/x-red" data-help-name="assert">
     <p>A node to check messages based on property values.</p>
+
+    <h3>Properties</h3>
+    <dl class="message-properties">
+        <dt>name
+            <span class="property-type">string</span>
+        </dt>
+        <dd> name of node to be displayed in editor</dd>
+        <dt>property</dt>
+        <dd> msg, flow or global property to be tested</dd>
+        <dt>test</dt>
+        <dd>test to be performed on property</dd>
+        <dt>fail message<span class="property-type">string</span></dt>
+        <dd>message that describes the test that failed<dd>
+    </dl>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+    <p>Any</p>
+    </dl>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+    <p>Input message is passed unchanged if it passed all tests.</p>
+    </dl>
+
+    <h3>Details</h3>
+    <p>Node is configured with a set of rules that define the conditions for properties to be valid data.
+     Tests are able to probe inside of objects and arrays using Javascript descriptors, including
+     the length of strings and arrays.</p>
+
     <p>When a message arrives, the selected properties are evaluated against each
-    of the defined rules. The message is then sent to the output if <i>all</i>
+    of the defined rules. The message is then sent to the output only if <i>all</i>
     of the rules pass.</p>
-    <p>An <i>assertion</i> error is thrown if any rule fails.</p>
+
+    <p><code>previous value</code> refers to the previous value received for the tested property.
+    <code>Mean</code> is a sliding window mean of all specified number of previous values received
+    for the tested property.</p>
+
+    <p>An <i>assertion</i> error is thrown if any rule fails. The error is attached to the original
+    message which can be caught by a Catch node.</p>
+
+    <p>The <code>Fail Message</code> for the first test that failed is displayed on the node and appended
+    to the error message.</p>
 </script>
 
 <script type="text/javascript">
@@ -73,7 +110,7 @@
                 {value:"type",type:"is type"}
             ];
 
-            var types = ["number", "string", "boolean", "array", "buffer", "object"];
+            var types = ["number", "string", "boolean", "array", "buffer", "object", "function"];
 
             var andLabel = this._("node-red:switch.and");
             var caseLabel = this._("node-red:switch.ignorecase");
@@ -110,8 +147,8 @@
                         valueField.typedInput("width",(newWidth-selectWidth-70));
                     }
                 }
-		var failMsgField = rule.find(".node-input-rule-msg");
-		failMsgField.width(newWidth - 157);
+                var failMsgField = rule.find(".node-input-rule-msg");
+                failMsgField.width(newWidth - 157);
             }
 
             $("#node-input-rule-container").css('min-height','250px').css('min-width','450px').editableList({
@@ -125,7 +162,7 @@
                         rule.property = 'payload';
                     }
 
-		    var row = $('<div/>',{style:"padding-left: 5px;"}).appendTo(container);
+                    var row = $('<div/>',{style:"padding-left: 5px;"}).appendTo(container);
                     var row1 = $('<div/>',{style:"padding-top: 5px; padding-left: 5px;"}).appendTo(container);
                     var row2 = $('<div/>',{style:"padding-top: 5px; padding-left: 175px;"}).appendTo(container);
                     var row3 = $('<div/>',{style:"padding-top: 5px; padding-left: 111px;"}).appendTo(container);
@@ -252,7 +289,9 @@
                     rules.each(function(i) { $(this).find(".node-input-rule-index").html(i+1); });
                 },
                 sortable: true,
-                removable: true
+                removable: true,
+                header: $("<p>").css("font-size", "14px").text("Tests")
+
             });
 
             for (var i=0;i<this.rules.length;i++) {
