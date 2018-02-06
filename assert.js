@@ -67,46 +67,44 @@ module.exports = function(RED) {
             rule.meanSize = 1;
 
             if (!rule.valueType) {
-                if (!isNaN(Number(rule.value))) {
+                if (!isNaN(parseFloat(rule.value))) {
                     rule.valueType = 'num';
                 } else {
                     rule.valueType = 'str';
                 }
             }
             if (rule.valueType === 'num') {
-                if (!isNaN(Number(rule.value))) {
-                    rule.value = Number(rule.value);
-                }
+                rule.value = parseInt(rule.value);
             }
             if (typeof rule.value2 !== 'undefined') {
                 if (!rule.value2Type) {
-                    if (!isNaN(Number(rule.value2))) {
+                    if (!isNaN(parseFloat(rule.value2))) {
                         rule.value2Type = 'num';
                     } else {
                         rule.value2Type = 'str';
                     }
                 }
                 if (rule.value2Type === 'num') {
-                    rule.value2 = Number(rule.value2);
+                    rule.value2 = parseFloat(rule.value2);
                 } else if (rule.value2Type === 'mean') {
-                    rule.meanSize = Number(rule.value2);
+                    rule.meanSize = parseInt(rule.value2);
                 }
             }
         }
 
-        this.on('input', function (msg) {
+        node.on('input', function (msg) {
             try {
                 for (var i=0; i<node.rules.length; i+=1) {
                     var rule = node.rules[i];
                     var test = RED.util.evaluateNodeProperty(rule.property,rule.propertyType,node,msg);
 
-	            var pass = true;
+                    var pass = true;
 
                     if (!(((rule.valueType === 'prev') || (rule.value2Type === 'prev') 
-			    || (rule.valueType === 'mean') || (rule.value2Type === 'mean')) 
-		            && (rule.previousValue.length == 0))) {                    
+                        || (rule.valueType === 'mean') || (rule.value2Type === 'mean'))
+                        && (rule.previousValue.length == 0))) {
 
-	                var v1,v2;
+                        var v1,v2;
                         if (rule.valueType === 'prev') {
                             v1 = rule.previousValue[0];
                         } else if (rule.valueType === 'mean') {
@@ -122,23 +120,22 @@ module.exports = function(RED) {
                         } else if (typeof v2 !== 'undefined') {
                             v2 = RED.util.evaluateNodeProperty(rule.value2,rule.value2Type,node,msg);
                         }
-
                         pass = operators[rule.type](test,v1,v2,rule.case);
-		    }
+                    }
 
                     rule.previousValue.push(test);
                     while (rule.previousValue.length > rule.meanSize) 
                         rule.previousValue.shift();
 
                     if (!pass) {
-                        this.status({fill:"red",shape:"dot",text:(rule.failMsg.length > 1) ? rule.failMsg : "Assertion " + (i+1) + " failed"});
+                        node.status({fill:"red",shape:"dot",text:(rule.failMsg.length > 1) ? rule.failMsg : "Assertion " + (i+1) + " failed"});
                     
                         throw new Error("Assertion " + (i+1) + " failed: " + " " + rule.propertyType + ":" + rule.property + ": " + operatorsDesc[rule.type](test,v1,v2,rule.case) + " " + rule.failMsg );
                     }
 
                 }
-                this.status({fill:"green",shape:"dot",text:"ok"});
-                this.send(msg);
+                node.status({fill:"green",shape:"dot",text:"ok"});
+                node.send(msg);
             } catch(err) {
                 node.error(err,msg);
             }
