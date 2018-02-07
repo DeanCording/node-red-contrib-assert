@@ -74,7 +74,7 @@ module.exports = function(RED) {
                 }
             }
             if (rule.valueType === 'num') {
-                rule.value = parseInt(rule.value);
+                rule.value = parseFloat(rule.value);
             }
             if (typeof rule.value2 !== 'undefined') {
                 if (!rule.value2Type) {
